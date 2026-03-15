@@ -406,7 +406,7 @@ Over the years of developing this proposal in the Privacy Sandbox, we've
 actively sought and encouraged [ecosystem participation and
 feedback](https://github.com/GoogleChrome/ip-protection/issues). We want to
 ensure that the ecosystem has sufficient time to provide input and feedback
-before implementing IP Protection in Incognito. Questions on Github have and
+before implementing IP Protection in Incognito. Questions on GitHub have and
 continue to act as a platform for collecting this feedback during the
 development phase. This feedback will be considered for refining our proposal
 and shaping the roadmap for IP Protection.

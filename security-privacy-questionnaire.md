@@ -9,14 +9,14 @@ This repository will be archived and no longer updated.
 # Self-Review Questionnaire: Security and Privacy
 *Last updated: April 18, 2025*
 
-**1\. What information does this feature expose, and for what purposes?**
+**01\. What information does this feature expose, and for what purposes?**
 
 It doesn’t expose any new information. Instead, it masks the source IP for eligible 3rd-party
 traffic (i.e.,
 [Masked Domain List](https://github.com/GoogleChrome/ip-protection/blob/main/Masked-Domain-List.md))
 to improve user privacy.
 
-**2\. Do features in your specification expose the minimum amount of information necessary to
+**02\. Do features in your specification expose the minimum amount of information necessary to
 implement the intended functionality?**
 
 Yes
