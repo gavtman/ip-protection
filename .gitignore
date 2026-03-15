@@ -1,0 +1,7 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Uploaded profile images (runtime artefact)
+profile-image-upload/uploads/

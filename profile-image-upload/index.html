@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile Image Upload</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.10);
+      padding: 2rem;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: #1a1a2e;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* ---- avatar preview ---- */
+    .avatar-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #e0e0e0;
+      background: #f0f2f5;
+    }
+
+    /* ---- file input (hidden, triggered by button) ---- */
+    #fileInput { display: none; }
+
+    /* ---- buttons ---- */
+    .btn {
+      display: inline-block;
+      padding: .65rem 1.25rem;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background .15s;
+    }
+
+    .btn-secondary {
+      background: #f0f2f5;
+      color: #333;
+      width: 100%;
+      text-align: center;
+      margin-bottom: .75rem;
+    }
+    .btn-secondary:hover { background: #e2e5ea; }
+
+    .btn-primary {
+      background: #4f46e5;
+      color: #fff;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-primary:hover { background: #4338ca; }
+    .btn-primary:disabled { background: #a5b4fc; cursor: not-allowed; }
+
+    /* ---- progress ---- */
+    .progress-bar-track {
+      background: #e0e0e0;
+      border-radius: 4px;
+      height: 6px;
+      margin-bottom: .75rem;
+      overflow: hidden;
+      display: none;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #4f46e5;
+      width: 0%;
+      transition: width .1s linear;
+    }
+
+    /* ---- status message ---- */
+    .status {
+      padding: .6rem 1rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      display: none;
+      margin-top: .75rem;
+    }
+    .status.success { background: #d1fae5; color: #065f46; display: block; }
+    .status.error   { background: #fee2e2; color: #991b1b; display: block; }
+
+    /* ---- uploaded URL ---- */
+    #uploadedUrl {
+      margin-top: .5rem;
+      font-size: .85rem;
+      word-break: break-all;
+    }
+    #uploadedUrl a { color: #4f46e5; }
+
+    /* ---- file info ---- */
+    .file-info {
+      font-size: .82rem;
+      color: #666;
+      margin-bottom: .75rem;
+      min-height: 1.2em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>Update Profile Picture</h1>
+
+  <div class="avatar-wrapper">
+    <img id="preview"
+         class="avatar"
+         src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='50' r='24' fill='%23c0c0c0'/%3E%3Cellipse cx='60' cy='105' rx='38' ry='28' fill='%23c0c0c0'/%3E%3C/svg%3E"
+         alt="Profile preview" />
+  </div>
+
+  <p class="file-info" id="fileInfo">No file selected</p>
+
+  <input type="file" id="fileInput" accept="image/jpeg,image/png,image/gif,image/webp" />
+
+  <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+    Choose Image
+  </button>
+
+  <div class="progress-bar-track" id="progressTrack">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+
+  <button class="btn btn-primary" id="uploadBtn" disabled onclick="uploadImage()">
+    Upload
+  </button>
+
+  <div class="status" id="status"></div>
+  <div id="uploadedUrl"></div>
+</div>
+
+<script>
+  const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+  const fileInput   = document.getElementById('fileInput');
+  const preview     = document.getElementById('preview');
+  const fileInfo    = document.getElementById('fileInfo');
+  const uploadBtn   = document.getElementById('uploadBtn');
+  const status      = document.getElementById('status');
+  const progressTrack = document.getElementById('progressTrack');
+  const progressFill  = document.getElementById('progressFill');
+  const uploadedUrl   = document.getElementById('uploadedUrl');
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    status.className = 'status';
+    status.textContent = '';
+    uploadedUrl.innerHTML = '';
+
+    if (!file) {
+      fileInfo.textContent = 'No file selected';
+      uploadBtn.disabled = true;
+      return;
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      showError('Unsupported file type. Please select a JPEG, PNG, GIF, or WEBP image.');
+      uploadBtn.disabled = true;
+      return;
+    }
+
+    if (file.size > MAX_SIZE) {
+      showError('File is too large. Maximum size is 5 MB.');
+      uploadBtn.disabled = true;
+      return;
+    }
+
+    fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+    uploadBtn.disabled = false;
+
+    const reader = new FileReader();
+    reader.onload = e => { preview.src = e.target.result; };
+    reader.readAsDataURL(file);
+  });
+
+  function uploadImage() {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    uploadBtn.disabled = true;
+    progressTrack.style.display = 'block';
+    progressFill.style.width = '0%';
+    status.className = 'status';
+    status.textContent = '';
+    uploadedUrl.innerHTML = '';
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener('progress', e => {
+      if (e.lengthComputable) {
+        progressFill.style.width = `${Math.round(e.loaded / e.total * 100)}%`;
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      progressFill.style.width = '100%';
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) {
+          showSuccess(data.message || 'Upload successful!');
+          uploadedUrl.innerHTML =
+            `View: <a href="${data.url}" target="_blank">${data.url}</a>`;
+        } else {
+          showError(data.error || 'Upload failed.');
+          uploadBtn.disabled = false;
+        }
+      } catch (_) {
+        showError('Unexpected server response.');
+        uploadBtn.disabled = false;
+      }
+      setTimeout(() => { progressTrack.style.display = 'none'; }, 800);
+    });
+
+    xhr.addEventListener('error', () => {
+      showError('Network error. Please check your connection and try again.');
+      uploadBtn.disabled = false;
+      progressTrack.style.display = 'none';
+    });
+
+    xhr.open('POST', '/upload');
+    xhr.send(formData);
+  }
+
+  function showSuccess(msg) {
+    status.textContent = msg;
+    status.className = 'status success';
+  }
+
+  function showError(msg) {
+    status.textContent = msg;
+    status.className = 'status error';
+  }
+</script>
+</body>
+</html>
