@@ -187,8 +187,8 @@ contents. Any interested party can decrypt the PRTs they received during the
 corresponding period and verify the reveal rate, ensuring that the issuer is
 behaving honestly.
 
-For Google's implementation of the PRT issuer, we will publish keys to Github.
-We will update the explainer with the Github repository at launch.
+For Google's implementation of the PRT issuer, we will publish keys to GitHub.
+We will update the explainer with the GitHub repository at launch.
 
 When an origin receives a PRT, it will store the PRT until the corresponding
 private key and HMAC secret are published by the issuer. The origin can then
@@ -236,7 +236,7 @@ detection of attacks occurring exclusively in masked traffic.
 
 We expect the epoch and delay period lengths to begin at one day each, but are
 open to feedback on reasonable lengths of time. Please leave your feedback in
-[this github issue](https://github.com/GoogleChrome/ip-protection/issues/82) to explain your rationale for the timing. The delay
+[this GitHub issue](https://github.com/GoogleChrome/ip-protection/issues/82) to explain your rationale for the timing. The delay
 period should be long enough such that it is impractical to associate revealed
 tokens back to a current user session, but not so long in combination with the
 epoch length that it is difficult to reprocess events and compile fraud
@@ -256,7 +256,7 @@ together.
 Before sending a token on a connection to a particular 1P/3P pair, the client
 re-randomizes the ciphertext for that token to make it unlinkable to any other
 usage of the token for other 1P/3P pair requests. The client will cache the
-cyphertexts for each 1P/3P pairing and reuse them on subsequent requests while
+ciphertexts for each 1P/3P pairing and reuse them on subsequent requests while
 the underlying token remains valid. Received tokens may be stored by origins in
 partitioned storage, and so more granular re-randomization (e.g. per request) is
 unnecessary.
