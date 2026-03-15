@@ -15,6 +15,9 @@ address in third party contexts in Incognito mode, enhancing Incognito's
 protections against cross-site tracking when users choose to browse in this
 mode.
 
+For a concise summary of what IP Protection can and cannot do, see the
+[Capabilities Overview](./Capabilities.md).
+
 IP addresses are essential to the basic functioning of the web, notably for
 routing traffic and to prevent fraud and spam. However, like third-party
 cookies, they can also be used for tracking. For Chrome users who choose to
