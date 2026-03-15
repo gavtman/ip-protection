@@ -303,7 +303,7 @@ websites.
         <figcaption>
           Site C &amp; B are owned by the same entity, Site B gets the original IP
         </figcaption>
-      <figure>
+      </figure>
     </td>
   </tr>
 </table>
