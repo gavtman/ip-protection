@@ -79,3 +79,13 @@ The weighted sum is divided by 11; the remainder gives the check digit (remainde
 - **ISO 3779** — defines the VIN structure internationally
 - **ISO 3780** — defines the World Manufacturer Identifier (WMI) codes
 - **FMVSS 115** — US federal standard requiring VIN on all road vehicles since 1981
+
+## VIN History Checker Tool
+
+The [`vin-history-checker/`](vin-history-checker/) directory contains a zero-dependency Python 3
+command-line tool that validates any VIN, decodes all of its fields, and generates
+direct links to public vehicle-history databases (NHTSA, Carfax, AutoCheck, and others).
+
+```
+python3 vin-history-checker/vin_checker.py 3MZBM1U77FM131942
+```
