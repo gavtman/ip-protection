@@ -92,7 +92,7 @@ address, from being linked to origin-bound traffic:
   tunnels that Chrome uses to connect through each proxy server. When the
   request supports HTTPS the flow is the following: There is an encrypted QUIC
   tunnel between the client and proxyA; through it, there is another QUIC tunnel
-  between the client and proxy B; through that tunnel, there is an end-to-end
+  between the client and proxyB; through that tunnel, there is an end-to-end
   HTTPS connection between the client and the website, protected by QUIC or TLS.
   This end-to-end encryption prevents both proxies from seeing any browsing
   contents including the destination URL. The client-proxyB encryption prevents
@@ -108,7 +108,7 @@ address, from being linked to origin-bound traffic:
   all proxy servers. This will include open source bounds on what metadata is
   shared with proxies during this authentication process. This metadata is used
   to provide the information that is necessary for the basic operation of the
-  proxy B, which includes: (i) approximate token expiration to detect expired
+  proxyB, which includes: (i) approximate token expiration to detect expired
   tokens and, (ii) IP Geolocation to assign the appropriate egress IP. Chrome is
   committed to ensuring a user cannot be uniquely identified via their unblinded
   token or associated authentication metadata.
