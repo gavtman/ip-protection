@@ -424,3 +424,7 @@ to choose a virtual location, IP Protection reflects the user's actual country
 and nearest metropolitan area. IP Protection is designed to complement active
 VPN services, ensuring that both can function simultaneously on the same device
 without interference.
+
+## Vehicle Identification Numbers (VIN)
+
+For information about Vehicle Identification Numbers and how unique vehicle identifiers relate to privacy, see [VIN.md](VIN.md).
