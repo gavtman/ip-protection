@@ -10,12 +10,10 @@ import {
 import Svg, {
   Circle,
   Line,
-  G,
   Path,
   Defs,
   RadialGradient,
   Stop,
-  Polygon,
 } from 'react-native-svg';
 
 const { width } = Dimensions.get('window');
@@ -84,8 +82,6 @@ function RadarBlip({ blip }) {
     />
   );
 }
-
-const AnimatedG = Animated.createAnimatedComponent(G);
 
 export default function RadarScreen() {
   const sweepAnim = useRef(new Animated.Value(0)).current;

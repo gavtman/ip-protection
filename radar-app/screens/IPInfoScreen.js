@@ -55,6 +55,11 @@ export default function IPInfoScreen() {
     fetchIPData();
   }, []);
 
+  const displayIP = useMemo(
+    () => (masked ? maskIP(ipData?.ip) : ipData?.ip),
+    [masked, ipData?.ip]
+  );
+
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -63,11 +68,6 @@ export default function IPInfoScreen() {
       </View>
     );
   }
-
-  const displayIP = useMemo(
-    () => (masked ? maskIP(ipData?.ip) : ipData?.ip),
-    [masked, ipData?.ip]
-  );
 
   return (
     <ScrollView
@@ -153,6 +153,13 @@ export default function IPInfoScreen() {
 
 function maskIP(ip) {
   if (!ip) return '██.██.██.██';
+  // IPv6 — mask the last four groups
+  if (ip.includes(':')) {
+    const parts = ip.split(':');
+    const visible = parts.slice(0, Math.max(1, parts.length - 4)).join(':');
+    return `${visible}:██:██:██:██`;
+  }
+  // IPv4 — mask the last two octets
   const parts = ip.split('.');
   if (parts.length === 4) {
     return `${parts[0]}.${parts[1]}.██.██`;
