@@ -150,7 +150,10 @@ in a third-party context (for example if the domain is embedded within another
 website). If that domain is accessed in a first-party context it will receive
 the original unmasked IP address. Domains that are not on the list will be
 unaffected in either third- or first-party contexts. This applies equally to
-Google-owned and non-Google-owned domains.
+Google-owned and non-Google-owned domains. Because every outbound request must
+be checked against the MDL, implementations should load the list into a hash
+set at startup to ensure O(1) per-request lookups rather than scanning the
+full list linearly.
 
 #### The Masked Domain List Criteria
 

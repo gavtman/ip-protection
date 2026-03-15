@@ -134,7 +134,9 @@ instead of the IP address. The issuer will then generate a message containing
 the chosen IP address or NULL, some low-entropy metadata including a token
 version, token ordinal, and an HMAC of the token contents. Finally, the issuer
 will encrypt each token using ElGamal encryption and return the batch of tokens
-to the client.
+to the client. Because each token in a batch is independent, the HMAC and
+ElGamal encryption steps for individual tokens can be computed in parallel,
+reducing overall batch generation latency.
 
 ### Sending Probabilistic Reveal Tokens
 
@@ -146,7 +148,9 @@ an associated PRT. If the client has already associated a PRT with the top level
 site and this PRT has not expired, the token's cipher text is re-randomized and
 attached to the request. If there is no PRT associated with the top level site
 or the PRT is expired, the client randomly picks a PRT from pre-fetched PRTs,
-re-randomizes it, and associates it with the top level origin. \
+re-randomizes it, and associates it with the top level origin. For efficiency,
+implementations should store the registration list as a hash set so that each
+per-request lookup is O(1) rather than scanning the full list. \
 The client includes re-randomized PRTs in the
 [Sec-Probabilistic-Reveal-Token](https://source.chromium.org/chromium/chromium/src/+/main:net/http/http_network_transaction.cc;drc=0302427cb7d80ae6b980f50ae7eb5801bde36004;l=1298)
 header. Values are [Structured Header Byte
@@ -261,9 +265,11 @@ the underlying token remains valid. Received tokens may be stored by origins in
 partitioned storage, and so more granular re-randomization (e.g. per request) is
 unnecessary.
 
-As re-randomization is a non-trivial computational operation the client may,
-without loss of privacy or security, choose to pre-randomize tokens, ready for
-attaching to connections.
+As re-randomization is a non-trivial computational operation the client should,
+without loss of privacy or security, pre-randomize tokens ahead of time, ready for
+attaching to connections. Computing re-randomization on the critical request
+path adds per-request latency; pre-randomizing during idle periods avoids this
+cost entirely.
 
 ### PRT affinity to Top-Frame Site During a Delay Period
 
