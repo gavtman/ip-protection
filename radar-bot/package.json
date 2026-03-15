@@ -1,0 +1,23 @@
+{
+  "name": "radar-bot",
+  "version": "1.0.0",
+  "description": "Command-line bot that scans domains against Chrome's IP Protection Masked Domain List",
+  "main": "bot.js",
+  "bin": {
+    "radar-bot": "./bot.js"
+  },
+  "scripts": {
+    "start": "node bot.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "ip-protection",
+    "masked-domain-list",
+    "privacy",
+    "radar"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
