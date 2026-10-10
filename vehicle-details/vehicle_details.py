@@ -93,6 +93,7 @@ _COUNTRY: dict[str, str] = {
 
 
 def _char_value(c: str) -> int:
+    """Return the numeric VIN value of a character, or -1 if unmapped."""
     if c.isdigit():
         return int(c)
     return _TRANSLITERATION.get(c, -1)
@@ -162,6 +163,7 @@ def save_store(store: dict, path: str = DEFAULT_STORE) -> None:
 
 
 def _now_iso() -> str:
+    """Return the current UTC timestamp as YYYY-MM-DDTHH:MM:SSZ."""
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
@@ -283,12 +285,14 @@ def remove_vehicle(vin: str, store_path: str = DEFAULT_STORE) -> dict:
 # ---------------------------------------------------------------------------
 
 def _header(text: str) -> None:
+    """Print a section title between horizontal rules."""
     print(f"\n{'─' * 60}")
     print(f"  {text}")
     print(f"{'─' * 60}")
 
 
 def _print_record(record: dict) -> None:
+    """Print decoded fields, user details, and timestamps for a vehicle."""
     _header(f"Vehicle — {record['vin']}")
 
     static_labels = [
@@ -338,6 +342,7 @@ def _print_record(record: dict) -> None:
 # ---------------------------------------------------------------------------
 
 def _usage() -> None:
+    """Print CLI syntax, editable fields, and example commands."""
     prog = os.path.basename(sys.argv[0])
     print(
         f"\nUsage:\n"
@@ -355,6 +360,7 @@ def _usage() -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run explicit arguments or sys.argv[1:]; return 0 on success or 1 on error."""
     args = argv if argv is not None else sys.argv[1:]
 
     if not args:
